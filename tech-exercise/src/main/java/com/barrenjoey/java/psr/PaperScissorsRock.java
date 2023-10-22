@@ -63,7 +63,7 @@ public class PaperScissorsRock {
 
 
     private static void runGame(int rounds, List<Player> players, Scanner scanner, Map<Integer, Result> results) {
-        RockPepperScissorsGamePlayService gamePlayService = new RockPepperScissorsGamePlayService();
+        GenericRockPaperScissorService gamePlayService = new RockPepperScissorsGamePlayService();
         for(int r = 1; r <= rounds; r++) {
             Result result = null;
             List<Move> moves = new ArrayList<>();
@@ -86,7 +86,6 @@ public class PaperScissorsRock {
             }
             results.putIfAbsent(r, result);
         }
-
     }
 
     public static void main(String[] args) {

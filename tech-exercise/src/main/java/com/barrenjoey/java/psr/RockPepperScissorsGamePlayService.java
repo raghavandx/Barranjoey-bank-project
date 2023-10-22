@@ -8,15 +8,17 @@ import com.barrenjoey.java.psr.model.Result;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RockPepperScissorsGamePlayService {
-    private Map<Item, List<Item>> winningMoves;
+public class RockPepperScissorsGamePlayService implements GenericRockPaperScissorService {
+    private final Map<Item, List<Item>> winningMoves;
+    public RockPepperScissorsGamePlayService() {
+        winningMoves = setUpWinningMoves();
+    }
     public Result playGame(List<Move> moves) {
         Set<Item> uniqueMoves = moves.stream().map(Move::getItem).collect(Collectors.toSet());
         if(uniqueMoves.size() != 2) {
             return Result.tieResult();
         }
         else {
-            winningMoves = setUpWinningMoves();
             for(Map.Entry<Item, List<Item>> entry : winningMoves.entrySet()) {
                 if(entry.getValue().containsAll(uniqueMoves)) {
                     Result winner = new Result();
@@ -37,7 +39,7 @@ public class RockPepperScissorsGamePlayService {
     }
 
     public Map<Item, List<Item>> setUpWinningMoves() {
-        HashMap<Item, List<Item>> items = new HashMap<>();
+        Map<Item, List<Item>> winningMoves = new HashMap<>();
         //This can also be defined in configuration files
         //insert the winning combination, eg for Rock -> Rock can smash scissor
         //Paper -> Paper is the winner, as paper covers the rock
@@ -45,12 +47,12 @@ public class RockPepperScissorsGamePlayService {
         //Extension
         //Lizard -> Lizard eats paper
         //Rock -> Rock kills Lizard
-        items.put(Item.Rock, Arrays.asList(Item.Rock, Item.Scissor));
-        items.put(Item.Paper, Arrays.asList(Item.Paper, Item.Rock));
-        items.put(Item.Scissor, Arrays.asList(Item.Scissor, Item.Paper));
-        items.put(Item.Lizard, Arrays.asList(Item.Lizard, Item.Paper));
-        items.put(Item.Rock, Arrays.asList(Item.Rock, Item.Lizard));
-        items.put(Item.Scissor, Arrays.asList(Item.Scissor, Item.Lizard));
-        return items;
+        winningMoves.put(Item.Rock, Arrays.asList(Item.Rock, Item.Scissor));
+        winningMoves.put(Item.Paper, Arrays.asList(Item.Paper, Item.Rock));
+        winningMoves.put(Item.Scissor, Arrays.asList(Item.Scissor, Item.Paper));
+        winningMoves.put(Item.Lizard, Arrays.asList(Item.Lizard, Item.Paper));
+        winningMoves.put(Item.Rock, Arrays.asList(Item.Rock, Item.Lizard));
+        winningMoves.put(Item.Scissor, Arrays.asList(Item.Scissor, Item.Lizard));
+        return winningMoves;
     }
 }
