@@ -29,22 +29,24 @@ public class BankBalanceAggregator implements Runnable, Bank{
                     Integer accountId = Integer.parseInt(items[0]);
                     String action = items[1];
                     Double amount = Double.parseDouble(items[2]);
+                    BankAccount bankAcc = null;
                     if(accountBalances.containsKey(accountId)) {
-                        BankAccount bankAcc = accountBalances.get(accountId);
+                        bankAcc = accountBalances.get(accountId);
                         if("Withdraw".equals(action)) {
                             bankAcc.withdraw(amount);
                         }
                         else if("Deposit".equals(action)) {
                             bankAcc.deposit(amount);
                         }
-                        CompletableFuture.runAsync(() -> {
+                    }
+                    else {
+                        bankAcc = new BankAccountImpl(accountId, amount, action);
+                        accountBalances.put(accountId, bankAcc);
+                    }
+                     CompletableFuture.runAsync(() -> {
                             //System.out.println("Reporting activity at "+ Instant.now());
                             reportingServer.reportActivity(accountId, Instant.now(), amount, bankAcc.getBalance());
                         });
-                    }
-                    else {
-                        accountBalances.put(accountId, new BankAccountImpl(accountId, amount, action));
-                    }
                 }
                 System.out.println("Consumed: "+ activity);
             } catch (InterruptedException ex) {
