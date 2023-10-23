@@ -43,9 +43,11 @@ public class BankBalanceAggregator implements Runnable, Bank{
                         bankAcc = new BankAccountImpl(accountId, amount, action);
                         accountBalances.put(accountId, bankAcc);
                     }
-                     CompletableFuture.runAsync(() -> {
+
+                    Double balance = bankAcc.getBalance();
+                    CompletableFuture.runAsync(() -> {
                             //System.out.println("Reporting activity at "+ Instant.now());
-                            reportingServer.reportActivity(accountId, Instant.now(), amount, bankAcc.getBalance());
+                            reportingServer.reportActivity(accountId, Instant.now(), amount, balance);
                         });
                 }
                 System.out.println("Consumed: "+ activity);
